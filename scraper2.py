@@ -41,4 +41,47 @@ def clean_up(driver):
 		output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
 	return output[:-1].split()
 
+# parsing villages by id
+def get_village(driver):
+	return parser(driver, "ContentPlaceHolder_ddVillage")
 
+# parsing panchayat by id
+def get_panchayat_village(driver):
+	return parser(driver, "ContentPlaceHolder_ddPanchayat")
+
+# parsing blocks by id
+def get_block_panchayat(driver):
+	return parser(driver, "ContentPlaceHolder_ddBlock")
+
+def get_district_block(driver):
+	return parser(driver, "ContentPlaceHolder_dddistrict")
+
+# parsing state by id
+def get_state_district(driver):
+	return parser(driver, "ContentPlaceHolder_ddState")
+
+
+# parser parses through data 
+def parser(driver, id_d):
+	
+	for 
+		driver.execute_script(get_data(id_d, data))
+		time.sleep(4)
+	
+
+def main():
+	# get webdriver
+	driver = webbrowser()
+	
+	for state in get_state_district(driver):
+		for district in get_district_block(driver):
+			for block in get_block_panchayat(driver):
+				for panchayat in get_panchayat_village(driver):
+					for village in get_village(driver):
+	
+	
+
+
+
+if __name__ == '__main__':
+	main()
