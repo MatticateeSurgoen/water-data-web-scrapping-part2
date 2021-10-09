@@ -20,8 +20,16 @@ class SecretePage:
 	def sanity_check(self):
 		
 
+	# cleaning up data for storing in csv format
+	def clean_up(self):
+		output = ''
+		soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+		for data in soup.select('table.SNewFontReportTable tr td'):
+			output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
+		return output[:-1].split()
+
 	def close(self):
-		driver.back()
+		self.driver.back()
 
 
 # Get webbrowser with options
@@ -46,13 +54,6 @@ def get_data(id_d, id_num):
 def get_tested_samples_by_id(id_num):
 	return f"document.getElementById('ContentPlaceHolder_rpt_lnkSamples_{id_num}').click()"
 
-# cleaning up data for storing in csv format
-def clean_up(driver):
-	output = ''
-	soup = BeautifulSoup(driver.page_source, 'html.parser')
-	for data in soup.select('table.SNewFontReportTable tr td'):
-		output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
-	return output[:-1].split()
 
 # parsing villages by id
 def get_village(driver):
