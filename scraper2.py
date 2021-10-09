@@ -14,8 +14,14 @@ class SecretePage:
 	def show_Contaminants_separately(self):
 		self.driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
-	def next_page(self):
-		self.driver.execute_script
+	def pages(self):
+		self.driver.execute_script("")
+
+	def sanity_check(self):
+		
+
+	def close(self):
+		driver.back()
 
 
 # Get webbrowser with options
@@ -70,10 +76,13 @@ def get_state_district(driver):
 
 # parser parses through data 
 def parser(driver, id_d):
-	
-	for 
+	length = get_length_from_id(driver, id_d)
+	secrete_page = SecretePage(driver)
+
+	for data in range(1, length):
 		driver.execute_script(get_data(id_d, data))
 		time.sleep(4)
+		get_
 	
 
 def main():
