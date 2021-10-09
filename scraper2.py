@@ -1,5 +1,8 @@
 #!/usr/bin/env	python3
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import re
 from bs4 import BeautifulSoup
 import csv
@@ -15,11 +18,13 @@ class SecretePage:
 		self.driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
 	def pages(self):
-		self.driver.execute_script("")
+		length = int(self.driver.execute_script("return document.getElementById('tableReportTable').children[1].childElementCount;"))
+		self.driver.execute_script(get_length_from_id())
 
-	def sanity_check(self):
+		#element = WebDriverWait(driver, 10).until(
+		#	 EC.element_to_be_clickable((By.ID, "myDynamicElement"))
+ 
 		
-
 	# cleaning up data for storing in csv format
 	def clean_up(self):
 		output = ''
@@ -83,7 +88,6 @@ def parser(driver, id_d):
 	for data in range(1, length):
 		driver.execute_script(get_data(id_d, data))
 		time.sleep(4)
-		get_
 	
 
 def main():
