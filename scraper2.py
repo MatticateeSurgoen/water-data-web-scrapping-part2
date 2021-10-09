@@ -1,7 +1,7 @@
 #!/usr/bin/env	python3
 from selenium import webdriver
 import re
-from bs4 import BeautifulSoap
+from bs4 import BeautifulSoup
 import csv
 
 # checked contaminants and clicks show
@@ -29,3 +29,10 @@ def get_data(id_d, id_num):
 	return "document.getElementById('" + id_d + "').selectedIndex = " + str(id_num) + ';' + "document.getElementById('ContentPlaceHolder_btnGO').click();"
 
 
+def get_tested_samples_by_id(id_d):
+	return f"document.getElementById('ContentPlaceHolder_rpt_lnkSamples_{id_d}').click()"
+
+# cleaning up data for storing in csv format
+def clean_up(driver):
+	soup = BeautifulSoup(driver.page_source, 'html.parser')
+	soup
