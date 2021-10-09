@@ -5,10 +5,17 @@ from bs4 import BeautifulSoup
 import csv
 import numpy as np
 
-# checked contaminants and clicks show
-def show_Contaminants_separately(driver):
-	driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
+
+class SecretePage:
+	def __init__(driver):
+		self.driver = driver
+
+	# checked contaminants and clicks show
+	def show_Contaminants_separately(self):
+		self.driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
+	def next_page(self):
+		self.driver.execute_script
 
 
 # Get webbrowser with options
