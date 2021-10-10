@@ -4,7 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, JavascriptException
 import re
 from bs4 import BeautifulSoup
 import csv
@@ -38,7 +38,7 @@ class SecretePage:
 				self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ContentPlaceHolder_chkAll")))
 				self.show_Contaminants_separately()
 				self.next_page()
-			except TimeoutError:
+			except TimeoutException:
 				continue
  
 	def sanity_check(self, data):
@@ -60,14 +60,18 @@ class SecretePage:
 
 	# writes output into csvfile and traverse through number of page in secretepage
 	def next_page(self):
-		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
-		self.csvfile.writerows(self.clean_up())
 		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))
+		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
+
+		self.csvfile.writerows(self.clean_up())
 		for data in range(1, length):
 			self.driver.execute_script(f"document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').click()")
 			self.sanity_check(data)
 			self.csvfile.writerows(self.clean_up())
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))
 		self.driver.back()
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.OuterReportTable")))
+
 
 	# close file before exit
 	def close(self):
@@ -79,6 +83,7 @@ def get_webbrowser():
 	url = "https://ejalshakti.gov.in/IMISReports/Reports/WaterQuality/rpt_WQM_SampleTesting_S.aspx?Rep=0&RP=Y"
 	options = webdriver.ChromeOptions()
 	options.add_argument('--incognito')
+	# options.add_argument('--proxy-server="socks5://127.0.0.1:8080"')
 	#options.add_argument('--headless')		# to start in command line interface
 	driver = webdriver.Chrome(options=options)
 	driver.get(url)
