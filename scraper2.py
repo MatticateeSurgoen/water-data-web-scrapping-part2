@@ -4,11 +4,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 import re
 from bs4 import BeautifulSoup
 import csv
 import numpy as np
 
+secrete_page = None
 
 # secrete page 
 class SecretePage:
@@ -16,19 +18,27 @@ class SecretePage:
 		self.driver = driver
 		self.file = open("output.csv", 'w', newline='')
 		self.csvfile = csv.writer(self.file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+		self.wait = WebDriverWait(self.driver, 10)
 
 	# checked contaminants and clicks show
 	def show_Contaminants_separately(self):
 		self.driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
-	def pages(self):
+
+	# pages before entrpy
+	def pages_before_entry(self):
 		length = int(self.driver.execute_script("return document.getElementById('tableReportTable').children[1].childElementCount;"))
 
 		for out in range(length - 1):
 			try:
-				element = WebDriverWait(self.driver, 2).until(
-					 EC.element_to_be_clickable((By.ID, f"ContentPlaceHolder_rpt_lnkSamples_{out}")))
-			except TimeoutException:
+				string_data = "ContentPlaceHolder_rpt_lnkSamples_" + str(out)
+				self.wait.until(
+					 EC.element_to_be_clickable((By.ID, string_data)))
+				self.driver.execute_script(f"document.getElementById('{string_data}').click()")
+				self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ContentPlaceHolder_chkAll")))
+				self.show_Contaminants_separately()
+				self.next_page()
+			except TimeoutError:
 				continue
  
 	def sanity_check(self, data):
@@ -47,10 +57,12 @@ class SecretePage:
 			output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
 		output = np.array(output[:-1].split('|'))
 		return output.reshape(len(output) // 33, 33)[:, 1:]
+
 	# writes output into csvfile and traverse through number of page in secretepage
 	def next_page(self):
 		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
 		self.csvfile.writerows(self.clean_up())
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))
 		for data in range(1, length):
 			self.driver.execute_script(f"document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').click()")
 			self.sanity_check(data)
@@ -108,18 +120,22 @@ def get_state_district(driver):
 
 # parser parses through data 
 def parser(driver, id_d):
+	global secrete_page
 	length = get_length_from_id(driver, id_d)
-	secrete_page = SecretePage(driver)
 
 	for data in range(1, length):
 		driver.execute_script(get_data(id_d, data))
 		time.sleep(4)
+		secrete_page.pages_before_entry()
 		yield 
 	
+
 def main():
 	# get webdriver
 	driver = get_webbrowser()
-	
+	global secrete_page	
+	secrete_page = SecretePage(driver)
+
 	# traverse through whole options
 	for state in get_state_district(driver):
 		for district in get_district_block(driver):
@@ -128,6 +144,7 @@ def main():
 					for village in get_village(driver):
 						pass
 	
+	secrete_page.close()
 
 if __name__ == '__main__':
 	main()
