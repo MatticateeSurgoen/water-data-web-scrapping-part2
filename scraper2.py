@@ -23,15 +23,21 @@ class SecretePage:
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
 	def pages(self):
 		length = int(self.driver.execute_script("return document.getElementById('tableReportTable').children[1].childElementCount;"))
-		# self.driver.execute_script(get_length_from_id())
 
 		for out in range(length - 1):
 			try:
 				element = WebDriverWait(self.driver, 2).until(
 					 EC.element_to_be_clickable((By.ID, f"ContentPlaceHolder_rpt_lnkSamples_{out}")))
-			except:
+			except TimeoutException:
 				continue
  
+	def sanity_check(self, data):
+		while (True):
+			color = self.driver.execute_script(f"return document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').style.color")
+			if color != "red":
+				time.sleep(4)
+				continue
+			break
 		
 	# cleaning up data for storing in csv format
 	def clean_up(self):
@@ -41,15 +47,14 @@ class SecretePage:
 			output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
 		output = np.array(output[:-1].split('|'))
 		return output.reshape(len(output) // 33, 33)[:, 1:]
-
 	# writes output into csvfile and traverse through number of page in secretepage
 	def next_page(self):
 		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
 		self.csvfile.writerows(self.clean_up())
 		for data in range(1, length):
 			self.driver.execute_script(f"document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').click()")
+			self.sanity_check(data)
 			self.csvfile.writerows(self.clean_up())
-			time.sleep(4)
 		self.driver.back()
 
 	# close file before exit
@@ -75,10 +80,7 @@ def get_length_from_id(driver, id_d):
 
 # selects elements by id and click it.
 def get_data(id_d, id_num):
-	return "document.getElementById('" + id_d 
-			+ "').selectedIndex = " + str(id_num) + ';' 
-						+ "document.getElementById('ContentPlaceHolder_btnGO').click();"
-
+	return "document.getElementById('" + id_d  + "').selectedIndex = " + str(id_num) + ';' + "document.getElementById('ContentPlaceHolder_btnGO').click();" 
 # clicks tested samples by id
 def get_tested_samples_by_id(id_num):
 	return f"document.getElementById('ContentPlaceHolder_rpt_lnkSamples_{id_num}').click()"
