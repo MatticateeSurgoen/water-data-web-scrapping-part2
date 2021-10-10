@@ -41,6 +41,7 @@ class SecretePage:
 			except TimeoutException:
 				continue
  
+	# check for clicked element is fully loaded 
 	def sanity_check(self, data):
 		while (True):
 			color = self.driver.execute_script(f"return document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').style.color")
@@ -68,13 +69,14 @@ class SecretePage:
 			self.driver.execute_script(f"document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').click()")
 			self.sanity_check(data)
 			self.csvfile.writerows(self.clean_up())
-		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))				# wait till 33 table data is loaded
 		self.driver.back()
-		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.OuterReportTable")))
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.OuterReportTable")))	# wait till table.OuterReportTable loaded
 
 
 	# close file before exit
 	def close(self):
+		self.driver.close()
 		self.file.close()
 
 
@@ -149,6 +151,7 @@ def main():
 					for village in get_village(driver):
 						pass
 	
+	# close driver and csv file
 	secrete_page.close()
 
 if __name__ == '__main__':
