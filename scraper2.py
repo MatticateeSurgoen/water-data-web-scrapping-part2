@@ -35,7 +35,7 @@ class SecretePage:
 		while (True):
 			color = self.driver.execute_script(f"return document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').style.color")
 			if color != "red":
-				time.sleep(4)
+				time.sleep(2)
 				continue
 			break
 		
