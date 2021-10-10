@@ -10,10 +10,11 @@ import csv
 import numpy as np
 
 
+# secrete page 
 class SecretePage:
 	def __init__(self, driver):
 		self.driver = driver
-		self.file = open("eggs.csv", 'w', newline='')
+		self.file = open("output.csv", 'w', newline='')
 		self.csvfile = csv.writer(self.file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 	# checked contaminants and clicks show
@@ -41,6 +42,7 @@ class SecretePage:
 		output = np.array(output[:-1].split('|'))
 		return output.reshape(len(output) // 33, 33)[:, 1:]
 
+	# writes output into csvfile and traverse through number of page in secretepage
 	def next_page(self):
 		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
 		self.csvfile.writerows(self.clean_up())
@@ -50,7 +52,7 @@ class SecretePage:
 			time.sleep(4)
 		self.driver.back()
 
-	
+	# close file before exit
 	def close(self):
 		self.file.close()
 
@@ -66,14 +68,18 @@ def get_webbrowser():
 	return driver
 
 
+# get total number of element with given id
 def get_length_from_id(driver, id_d):
 	length = int(driver.execute_script("return document.getElementById('" + id_d + "').length"))
 	return length
 
+# selects elements by id and click it.
 def get_data(id_d, id_num):
-	return "document.getElementById('" + id_d + "').selectedIndex = " + str(id_num) + ';' + "document.getElementById('ContentPlaceHolder_btnGO').click();"
+	return "document.getElementById('" + id_d 
+			+ "').selectedIndex = " + str(id_num) + ';' 
+						+ "document.getElementById('ContentPlaceHolder_btnGO').click();"
 
-
+# clicks tested samples by id
 def get_tested_samples_by_id(id_num):
 	return f"document.getElementById('ContentPlaceHolder_rpt_lnkSamples_{id_num}').click()"
 
@@ -112,6 +118,7 @@ def main():
 	# get webdriver
 	driver = get_webbrowser()
 	
+	# traverse through whole options
 	for state in get_state_district(driver):
 		for district in get_district_block(driver):
 			for block in get_block_panchayat(driver):
