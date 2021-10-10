@@ -13,6 +13,8 @@ import numpy as np
 class SecretePage:
 	def __init__(self, driver):
 		self.driver = driver
+		self.file = open("eggs.csv", 'w', newline='')
+		self.csvfile = csv.writer(self.file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 	# checked contaminants and clicks show
 	def show_Contaminants_separately(self):
@@ -41,14 +43,16 @@ class SecretePage:
 
 	def next_page(self):
 		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
-		for data in range(length):
+		self.csvfile.writerows(self.clean_up())
+		for data in range(1, length):
 			self.driver.execute_script(f"document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').click()")
-			yield self.clean_up()
+			self.csvfile.writerows(self.clean_up())
 			time.sleep(4)
+		self.driver.back()
 
 	
 	def close(self):
-		self.driver.back()
+		self.file.close()
 
 
 # Get webbrowser with options
