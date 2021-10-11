@@ -28,10 +28,10 @@ class SecretePage:
 
 	# pages before entrpy
 	def pages_before_entry(self):
+		time.sleep(4)
 		length = int(self.driver.execute_script("return document.getElementById('tableReportTable').children[1].childElementCount;"))
 
 		for out in range(length - 1):
-			print(length)
 			string_data = "ContentPlaceHolder_rpt_lnkSamples_" + str(out)
 			self.wait.until(
 				 EC.element_to_be_clickable((By.ID, string_data)))
@@ -135,8 +135,8 @@ def parser(driver, id_d):
 
 	for data in range(1, length):
 		driver.execute_script(get_data(id_d, data))
-		time.sleep(4)
 		secrete_page.pages_before_entry()
+		time.sleep(4)
 	
 
 def main():
