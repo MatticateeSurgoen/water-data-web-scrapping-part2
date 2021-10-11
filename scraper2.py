@@ -148,12 +148,6 @@ def main():
 	# traverse through whole options
 	get_state_district(driver)
 
-#		for district in get_district_block(driver):
-#			for block in get_block_panchayat(driver):
-#				for panchayat in get_panchayat_village(driver):
-#					for village in get_village(driver):
-#						pass
-#	
 	# close driver and csv file
 	secrete_page.close()
 
