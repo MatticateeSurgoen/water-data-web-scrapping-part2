@@ -151,16 +151,20 @@ def parser(driver, id_d):
 	
 
 def main():
-	# get webdriver
-	driver = get_webbrowser()
-	global secrete_page	
-	secrete_page = SecretePage(driver)
+	try:
+		# get webdriver
+		driver = get_webbrowser()
+		global secrete_page	
+		secrete_page = SecretePage(driver)
 
-	# traverse through whole options
-	get_state_district(driver)
+		# traverse through whole options
+		get_state_district(driver)
 
-	# close driver and csv file
-	secrete_page.close()
+		# close driver and csv file
+		secrete_page.close()
+	# closes opened file
+	finally:
+		secrete_page.file.close()
 
 if __name__ == '__main__':
 	main()
