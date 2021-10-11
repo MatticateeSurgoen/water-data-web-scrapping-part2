@@ -24,6 +24,7 @@ class SecretePage:
 	def show_Contaminants_separately(self):
 		self.driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))				# wait till 33 table data is loaded
 
 	# pages before entrpy
 	def pages_before_entry(self):
@@ -138,7 +139,6 @@ def parser(driver, id_d):
 		driver.execute_script(get_data(id_d, data))
 		time.sleep(4)
 		secrete_page.pages_before_entry()
-		yield 
 	
 
 def main():
@@ -148,8 +148,8 @@ def main():
 	secrete_page = SecretePage(driver)
 
 	# traverse through whole options
-	for state in get_state_district(driver):
-		pass 
+	get_state_district(driver)
+
 #		for district in get_district_block(driver):
 #			for block in get_block_panchayat(driver):
 #				for panchayat in get_panchayat_village(driver):
