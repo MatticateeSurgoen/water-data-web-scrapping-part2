@@ -25,7 +25,9 @@ class SecretePage:
 	def show_Contaminants_separately(self):
 		self.driver.execute_script("document.getElementById('ContentPlaceHolder_chkAll').checked = true;" +
 							"document.getElementById('ContentPlaceHolder_btnGO').click();")
-		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))				# wait till 33 table data is loaded
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 
+					"table.SNewFontReportTable th:nth-of-type(33)")))	
+												# wait till 33 table data is loaded
 
 	# pages before entrpy
 	def pages_before_entry(self):
