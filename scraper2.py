@@ -94,7 +94,11 @@ def get_webbrowser():
 
 # get total number of element with given id
 def get_length_from_id(driver, id_d):
-	length = int(driver.execute_script("return document.getElementById('" + id_d + "').length"))
+	try:
+		length = int(driver.execute_script("return document.getElementById('" + id_d + "').length"))
+	except:
+		driver.back()
+		length = int(driver.execute_script("return document.getElementById('" + id_d + "').length"))
 	return length
 
 # selects elements by id and click it.
@@ -145,12 +149,13 @@ def main():
 
 	# traverse through whole options
 	for state in get_state_district(driver):
-		for district in get_district_block(driver):
-			for block in get_block_panchayat(driver):
-				for panchayat in get_panchayat_village(driver):
-					for village in get_village(driver):
-						pass
-	
+		pass 
+#		for district in get_district_block(driver):
+#			for block in get_block_panchayat(driver):
+#				for panchayat in get_panchayat_village(driver):
+#					for village in get_village(driver):
+#						pass
+#	
 	# close driver and csv file
 	secrete_page.close()
 
