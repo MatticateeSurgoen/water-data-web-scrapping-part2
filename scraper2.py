@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import csv
 import numpy as np
 
+# page hidden inside of site
 secrete_page = None
 
 # secrete page 
@@ -53,25 +54,32 @@ class SecretePage:
 	def clean_up(self):
 		output = ''
 		soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+
 		for data in soup.select('table.SNewFontReportTable tr td'):
 			output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
+									# removes 2 or more space from data
 		output = np.array(output[:-1].split('|'))
 		return output.reshape(len(output) // 33, 33)[:, 1:]
 
 	# writes output into csvfile and traverse through number of page in secretepage
 	def next_page(self):
-		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 
+								"table.SNewFontReportTable th:nth-of-type(33)"))) # wait until table have 33 th
 		length = int(self.driver.execute_script("return document.getElementsByClassName('lnkPages').length"))
 
 		self.csvfile.writerows(self.clean_up())
+
 		for data in range(1, length):
 			self.driver.execute_script(f"document.getElementById('ContentPlaceHolder_repIndex_lnkPages_{data}').click()")
 			self.sanity_check(data)
 			self.csvfile.writerows(self.clean_up())
-		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.SNewFontReportTable th:nth-of-type(33)")))				# wait till 33 table data is loaded
-		self.driver.back()
-		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.OuterReportTable")))	# wait till table.OuterReportTable loaded
 
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
+							 "table.SNewFontReportTable th:nth-of-type(33)")))				
+														# wait till 33 table data is loaded
+		self.driver.back()
+		self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 
+							"table.OuterReportTable")))	# wait till table.OuterReportTable loaded
 
 	# close file before exit
 	def close(self):
@@ -79,12 +87,13 @@ class SecretePage:
 		self.file.close()
 
 
+
 # Get webbrowser with options
 def get_webbrowser():
 	url = "https://ejalshakti.gov.in/IMISReports/Reports/WaterQuality/rpt_WQM_SampleTesting_S.aspx?Rep=0&RP=Y"
 	options = webdriver.ChromeOptions()
 	options.add_argument('--incognito')
-	# options.add_argument('--proxy-server="socks5://127.0.0.1:8080"')		# for proxy options
+	#options.add_argument('--proxy-server="socks5://127.0.0.1:8080"')		# for proxy options
 	#options.add_argument('--headless')		# to start in command line interface
 	driver = webdriver.Chrome(options=options)
 	driver.get(url)
@@ -123,6 +132,7 @@ def get_tested_samples_by_id(id_num):
 #def get_district_block(driver):
 #	return parser(driver, "ContentPlaceHolder_dddistrict")
 
+
 # parsing state by id
 def get_state_district(driver):
 	return parser(driver, "ContentPlaceHolder_ddState")
@@ -133,6 +143,7 @@ def parser(driver, id_d):
 	global secrete_page
 	length = get_length_from_id(driver, id_d)
 
+	# loop through states
 	for data in range(1, length):
 		driver.execute_script(get_data(id_d, data))
 		secrete_page.pages_before_entry()
