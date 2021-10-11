@@ -84,7 +84,7 @@ def get_webbrowser():
 	url = "https://ejalshakti.gov.in/IMISReports/Reports/WaterQuality/rpt_WQM_SampleTesting_S.aspx?Rep=0&RP=Y"
 	options = webdriver.ChromeOptions()
 	options.add_argument('--incognito')
-	# options.add_argument('--proxy-server="socks5://127.0.0.1:8080"')
+	# options.add_argument('--proxy-server="socks5://127.0.0.1:8080"')		# for proxy options
 	#options.add_argument('--headless')		# to start in command line interface
 	driver = webdriver.Chrome(options=options)
 	driver.get(url)
