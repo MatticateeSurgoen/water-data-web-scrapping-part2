@@ -18,7 +18,7 @@ class SecretePage:
 		self.driver = driver
 		self.file = open("output.csv", 'w', newline='')
 		self.csvfile = csv.writer(self.file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-		self.wait = WebDriverWait(self.driver, 10)
+		self.wait = WebDriverWait(self.driver, 100)
 
 	# checked contaminants and clicks show
 	def show_Contaminants_separately(self):
@@ -31,16 +31,14 @@ class SecretePage:
 		length = int(self.driver.execute_script("return document.getElementById('tableReportTable').children[1].childElementCount;"))
 
 		for out in range(length - 1):
-			try:
-				string_data = "ContentPlaceHolder_rpt_lnkSamples_" + str(out)
-				self.wait.until(
-					 EC.element_to_be_clickable((By.ID, string_data)))
-				self.driver.execute_script(f"document.getElementById('{string_data}').click()")
-				self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ContentPlaceHolder_chkAll")))
-				self.show_Contaminants_separately()
-				self.next_page()
-			except TimeoutException:
-				continue
+			print(length)
+			string_data = "ContentPlaceHolder_rpt_lnkSamples_" + str(out)
+			self.wait.until(
+				 EC.element_to_be_clickable((By.ID, string_data)))
+			self.driver.execute_script(f"document.getElementById('{string_data}').click()")
+			self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "#ContentPlaceHolder_chkAll")))
+			self.show_Contaminants_separately()
+			self.next_page()
  
 	# check for clicked element is fully loaded 
 	def sanity_check(self, data):
@@ -110,20 +108,20 @@ def get_tested_samples_by_id(id_num):
 	return f"document.getElementById('ContentPlaceHolder_rpt_lnkSamples_{id_num}').click()"
 
 
-# parsing villages by id
-def get_village(driver):
-	return parser(driver, "ContentPlaceHolder_ddVillage")
-
-# parsing panchayat by id
-def get_panchayat_village(driver):
-	return parser(driver, "ContentPlaceHolder_ddPanchayat")
-
-# parsing blocks by id
-def get_block_panchayat(driver):
-	return parser(driver, "ContentPlaceHolder_ddBlock")
-
-def get_district_block(driver):
-	return parser(driver, "ContentPlaceHolder_dddistrict")
+## parsing villages by id
+#def get_village(driver):
+#	return parser(driver, "ContentPlaceHolder_ddVillage")
+#
+## parsing panchayat by id
+#def get_panchayat_village(driver):
+#	return parser(driver, "ContentPlaceHolder_ddPanchayat")
+#
+## parsing blocks by id
+#def get_block_panchayat(driver):
+#	return parser(driver, "ContentPlaceHolder_ddBlock")
+#
+#def get_district_block(driver):
+#	return parser(driver, "ContentPlaceHolder_dddistrict")
 
 # parsing state by id
 def get_state_district(driver):
