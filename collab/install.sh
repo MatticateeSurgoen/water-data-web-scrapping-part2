@@ -16,3 +16,7 @@ elif [ "$#" -eq 1 ]; then
 elif [ "$#" -eq 2 ]; then
   python3 collab/collab_ship.py $1 $2
 fi
+mv output.csv ..
+cd ..
+rm -rf water-data-web-scrapping-part2
+rm install.sh
