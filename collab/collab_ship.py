@@ -151,7 +151,7 @@ def parser(driver, id_d):
 	length = get_length_from_id(driver, id_d)
 
 	# loop through states
-	for data in range(int(sys.argv[1]), int(sys.argv[1])):
+	for data in range(int(sys.argv[1]), int(sys.argv[2])):
 		driver.execute_script(get_data(id_d, data))
 		secrete_page.pages_before_entry()
 		time.sleep(4)
