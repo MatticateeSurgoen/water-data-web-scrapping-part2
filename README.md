@@ -14,3 +14,6 @@
 > #### cd water-data-web-scrapping-part2
 > #### pip3 install -r requirements.txt
 > #### python3 ./scraper.py
+
+## for installing on collab
+> #### 
