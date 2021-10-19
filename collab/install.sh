@@ -7,3 +7,6 @@ mv /usr/lib/chromium-browser/chromedriver /usr/bin
 git clone https://github.com/ml-project-pdpu/water-data
 
 cd water-data-web-scrapping-part2
+pip3 install -r requirements.txt
+
+python3 collab/collab_ship.py
