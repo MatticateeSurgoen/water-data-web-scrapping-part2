@@ -5,10 +5,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, JavascriptException
+import sys
 import re
 from bs4 import BeautifulSoup
 import csv
 import numpy as np
+
 
 # page hidden inside of site
 secrete_page = None
@@ -149,7 +151,7 @@ def parser(driver, id_d):
 	length = get_length_from_id(driver, id_d)
 
 	# loop through states
-	for data in range(1, length):
+	for data in range(int(sys.argv[1]), int(sys.argv[1])):
 		driver.execute_script(get_data(id_d, data))
 		secrete_page.pages_before_entry()
 		time.sleep(4)
