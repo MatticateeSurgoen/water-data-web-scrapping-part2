@@ -61,6 +61,7 @@ class SecretePage:
 			output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
 									# removes 2 or more space from data
 		output = np.array(output[:-1].split('|'))
+		print(output.reshape(len(output) // 33, 33)[:, 1:])
 		return output.reshape(len(output) // 33, 33)[:, 1:]
 
 	# writes output into csvfile and traverse through number of page in secretepage
