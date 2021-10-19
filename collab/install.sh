@@ -9,4 +9,10 @@ git clone https://github.com/ml-project-pdpu/water-data-web-scrapping-part2
 cd water-data-web-scrapping-part2
 pip3 install -r requirements.txt
 
-python3 collab/collab_ship.py
+if [ "$#" -eq 0 ]; then
+  python3 collab/collab_ship.py 1 18
+elif [ "$#" -eq 1 ]; then
+  python3 collab/collab_ship.py $1 18
+elif [ "$#" -eq 2 ]; then
+  python3 collab/collab_ship.py $1 $2
+fi
