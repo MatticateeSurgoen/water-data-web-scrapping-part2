@@ -16,4 +16,6 @@
 > #### python3 ./scraper.py
 
 ## for installing on collab
-> #### 
+> #### wget "https://raw.githubusercontent.com/ml-project-pdpu/water-data-web-scrapping-part2/main/collab/install.sh" && bash install.sh 1 2
+
+#### where 1 and 2 are the range from 1 to 2
