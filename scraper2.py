@@ -1,17 +1,55 @@
 #!/usr/bin/env	python3
+
+
 import time
-from selenium import webdriver
+from selenium import webdriver				# import webdriver to communicate with web browser
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, JavascriptException
-import re
-from bs4 import BeautifulSoup
-import csv
-import numpy as np
+from selenium.common.exceptions import TimeoutException
+import re									# extract with regular expression selection
+from bs4 import BeautifulSoup				# to extract data with help of css selector
+import csv									# to write csv file and do operation related to it.
+import numpy as np							# to fastup process of array manipulation
 
 # page hidden inside of site
 secrete_page = None
+
+# to search location
+location_searcher = None
+
+# searching location wrapper class
+class getMeLocation:
+	def __init__(self):
+		# webbrowser driver
+		self.driver = None
+		# address of place 
+		self.address = None
+
+	def getwebbrowser(self):
+		options = webdriver.ChromeOptions()
+		options.add_argument("--headless")
+		self.driver = webdriver.Chrome(options=options)
+		self.driver.get("https://www.gps-coordinates.net/")		# from which website we have to scrap data
+		self.driver.execute_script("window.scrollBy(0,1700)")
+
+	def setAddress(self, address):
+		self.address = address		# set the address from where we have to get latitude and longitude
+		self.driver.execute_script(f"document.getElementById('address').value = '{self.address}'")		# set city name 
+		self.driver.execute_script("document.getElementsByClassName('btn btn-primary')[0].click()")		# click the Get GPS coordinate button
+
+	def fetchLatitude(self):
+		return self.driver.execute_script("return document.getElementById('latitude').value")		# to return latitude from javascript
+
+	def fetchLongitude(self):
+		return self.driver.execute_script("return document.getElementById('longitude').value")		# to return longitude from javascript
+
+
+	def close(self):
+		# close driver
+		self.driver.close()
+
+
 
 # secrete page 
 class SecretePage:
@@ -61,7 +99,16 @@ class SecretePage:
 			output += re.sub(' {2,}', '', BeautifulSoup.get_text(data)) + '|'
 									# removes 2 or more space from data
 		output = np.array(output[:-1].split('|'))
-		return output.reshape(len(output) // 33, 33)[:, 1:]
+		output = output.reshape(len(output) // 33, 33)[:, 1:]
+
+
+		# array to store latitude and longitude of cities
+		new_array 
+		for searching_input in output[]:
+			
+
+
+
 
 	# writes output into csvfile and traverse through number of page in secretepage
 	def next_page(self):
@@ -119,20 +166,7 @@ def get_tested_samples_by_id(id_num):
 	return f"document.getElementById('ContentPlaceHolder_rpt_lnkSamples_{id_num}').click()"
 
 
-## parsing villages by id
-#def get_village(driver):
-#	return parser(driver, "ContentPlaceHolder_ddVillage")
-#
-## parsing panchayat by id
-#def get_panchayat_village(driver):
-#	return parser(driver, "ContentPlaceHolder_ddPanchayat")
-#
-## parsing blocks by id
-#def get_block_panchayat(driver):
-#	return parser(driver, "ContentPlaceHolder_ddBlock")
-#
-#def get_district_block(driver):
-#	return parser(driver, "ContentPlaceHolder_dddistrict")
+
 
 
 # parsing state by id
@@ -159,6 +193,9 @@ def main():
 		global secrete_page	
 		secrete_page = SecretePage(driver)
 
+		# create a location_searcher 
+		location_searcher = getMeLocation()
+
 		# traverse through whole options
 		get_state_district(driver)
 
@@ -167,6 +204,7 @@ def main():
 	# closes opened file
 	finally:
 		secrete_page.file.close()
+		
 
 if __name__ == '__main__':
 	main()
