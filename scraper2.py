@@ -28,7 +28,7 @@ class getMeLocation:
 
 	def getwebbrowser(self):
 		options = webdriver.ChromeOptions()
-		options.add_argument("--headless")
+		# options.add_argument("--headless")
 		self.driver = webdriver.Chrome(options=options)
 		self.driver.get("https://www.gps-coordinates.net/")		# from which website we have to scrap data
 		self.driver.execute_script("window.scrollBy(0,1700)")
@@ -103,10 +103,12 @@ class SecretePage:
 
 
 		# array to store latitude and longitude of cities
-		new_array 
-		for searching_input in output[]:
-			
-
+		new_array = []
+		for searching_input in output:
+			location_searcher.setAddress(searching_input[4])
+			time.sleep(1)
+			new_array.append(np.r_[output, np.array(location_searcher.fetchLatitude()), np.array(location_searcher.fetchLongitude())])
+		return new_array
 
 
 
@@ -195,6 +197,9 @@ def main():
 
 		# create a location_searcher 
 		location_searcher = getMeLocation()
+
+		# start web browser for searcher window
+		location_searcher.getwebbrowser()
 
 		# traverse through whole options
 		get_state_district(driver)
