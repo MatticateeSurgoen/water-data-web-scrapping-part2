@@ -1,6 +1,5 @@
 #!/usr/bin/env	python3
 
-
 import time
 from selenium import webdriver				# import webdriver to communicate with web browser
 from selenium.webdriver.common.by import By
@@ -101,13 +100,14 @@ class SecretePage:
 		output = np.array(output[:-1].split('|'))
 		output = output.reshape(len(output) // 33, 33)[:, 1:]
 
-
 		# array to store latitude and longitude of cities
 		new_array = []
 		for searching_input in output:
 			location_searcher.setAddress(searching_input[4])
 			time.sleep(1)
-			new_array.append(np.r_[output, np.array(location_searcher.fetchLatitude()), np.array(location_searcher.fetchLongitude())])
+			new_array.append(np.r_[searching_input, np.array([location_searcher.fetchLatitude()])
+								, np.array(location_searcher.fetchLongitude())])
+
 		return new_array
 
 
@@ -206,9 +206,13 @@ def main():
 
 		# close driver and csv file
 		secrete_page.close()
+		location_searcher.close() 
+
 	# closes opened file
 	finally:
+		# close everything before closing
 		secrete_page.file.close()
+		location_searcher.close() 
 		
 
 if __name__ == '__main__':
