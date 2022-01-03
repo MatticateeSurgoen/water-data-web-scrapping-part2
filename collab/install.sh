@@ -1,5 +1,5 @@
 #!/bin/bash
-pip install selenium
+pip3 install selenium
 apt-get update # to update ubuntu to correctly run apt install
 apt install chromium-chromedriver
 mv /usr/lib/chromium-browser/chromedriver /usr/bin
