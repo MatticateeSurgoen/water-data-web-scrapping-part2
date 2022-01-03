@@ -17,7 +17,28 @@ secrete_page = None
 # to search location
 location_searcher = None
 
-# searching location wrapper class
+"""
+below class if for searching location
+getwebbrowser method:
+	will create a chrome browser
+	defines a driver for other methods
+	to interact with it
+
+setAddress method:
+	will the address location of given place by
+	using class driver from a website 
+	that is been used as back end of 
+	to find location from google maps
+
+fetchLatitude method:
+	gets latitude of the location by accessing
+	document object model of javascript
+
+fetchLongitutde method:
+	gets longitude of the location by accessing
+	document object model of javascript
+"""
+
 class getMeLocation:
 	def __init__(self):
 		# webbrowser driver
@@ -49,6 +70,33 @@ class getMeLocation:
 		self.driver.close()
 
 
+"""
+SecretePage refers to page in side states when 
+we click the link it will load other location
+
+show_Contaminants_separately method:
+	- clicks the button show contaminants separately
+	by using CSS selectors
+
+pages_before_entry method:
+	- selects states where to go one by one
+
+sanity_check method:
+	- will prevent race condition by check whether
+	 page is loaded or not if not try again after
+	 some time.
+
+clean_up method:
+	- will clean up html and extract table data from it
+	to store in output.csv
+
+next_page method:
+	will load next page inside secretepage
+close method:
+	will close the driver 
+	and also close the output.csv 
+"""
+
 
 # secrete page 
 class SecretePage:
@@ -66,7 +114,7 @@ class SecretePage:
 					"table.SNewFontReportTable th:nth-of-type(33)")))	
 												# wait till 33 table data is loaded
 
-	# pages before entrpy
+	# pages before entry
 	def pages_before_entry(self):
 		time.sleep(4)
 		length = int(self.driver.execute_script("return document.getElementById('tableReportTable').children[1].childElementCount;"))
