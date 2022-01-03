@@ -48,9 +48,10 @@ class getMeLocation:
 		# address of place 
 		self.address = None
 
-	def getwebbrowser(self):
+	def getwebbrowser(self, mode = None):
 		options = webdriver.ChromeOptions()
-		# options.add_argument("--headless")
+		if mode:
+			options.add_argument("--headless")
 		self.driver = webdriver.Chrome(options=options)
 		self.driver.get("https://www.gps-coordinates.net/")		# from which website we have to scrap data
 		self.driver.execute_script("window.scrollBy(0,1700)")
@@ -190,12 +191,13 @@ class SecretePage:
 
 
 # Get webbrowser with options
-def get_webbrowser():
+def get_webbrowser(mode = None):
 	url = "https://ejalshakti.gov.in/IMISReports/Reports/WaterQuality/rpt_WQM_SampleTesting_S.aspx?Rep=0&RP=Y"
 	options = webdriver.ChromeOptions()
 	options.add_argument('--incognito')
 	#options.add_argument('--proxy-server="socks5://127.0.0.1:8080"')		# for proxy options
-	#options.add_argument('--headless')		# to start in command line interface
+	if mode:
+		options.add_argument('--headless')		# to start in command line interface
 	driver = webdriver.Chrome(options=options)
 	driver.get(url)
 	return driver
@@ -238,13 +240,16 @@ def parser(driver, id_d):
 	if len(sys.argv) < 2:
 		argv1 = 1
 		argv2 = length
-	elif len(sys.argv) == 2:
-		argv1 = int(sys.argv[1])
-		argv2 = length
-	elif len(sys.argv) == 3:
-		argv1 = int(sys.argv[1])
-		argv2 = int(sys.argv[2])
-
+	else:
+		try:
+			if len(sys.argv) == 2:
+				argv1 = int(sys.argv[1])
+				argv2 = length
+			elif len(sys.argv) >= 3:
+				argv1 = int(sys.argv[1])
+				argv2 = int(sys.argv[2])
+		except ValueError:
+			pass
 
 	# loop through states
 	for data in range(1, length):
@@ -255,8 +260,13 @@ def parser(driver, id_d):
 
 def main():
 	try:
+		mode = False
+		for i in range(len(sys.argv)):
+			if sys.argv[i] == "--headless":
+				mode = True
+
 		# get webdriver
-		driver = get_webbrowser()
+		driver = get_webbrowser(mode)
 		global secrete_page, location_searcher
 		secrete_page = SecretePage(driver)
 
@@ -264,7 +274,7 @@ def main():
 		location_searcher = getMeLocation()
 
 		# start web browser for searcher window
-		location_searcher.getwebbrowser()
+		location_searcher.getwebbrowser(mode)
 
 		# traverse through whole options
 		get_state_district(driver)
