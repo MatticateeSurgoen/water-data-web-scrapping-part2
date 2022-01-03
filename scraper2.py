@@ -18,7 +18,17 @@ secrete_page = None
 # to search location
 location_searcher = None
 
+#TODO:
+"""
+searching method is very slow so
+requirment is to make it fast by using
+threads and requests module of python3
+rather than selanium
 
+f"https://api.opencagedata.com/geocode/v1/json?q={query_location}&key=03c48dae07364cabb7f121d8c1519492"
+
+where replace query_location with name of city the last one is key
+that extracted by analysing code of site.
 """
 class getMeLocation: for searching location
 getwebbrowser method:
