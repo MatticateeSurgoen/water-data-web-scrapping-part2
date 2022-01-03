@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-import re									# extract with regular expression selection
+import re									# extract data with regular expression selection
 from bs4 import BeautifulSoup				# to extract data with help of css selector
 import csv									# to write csv file and do operation related to it.
 import numpy as np							# to fastup process of array manipulation
@@ -20,7 +20,7 @@ location_searcher = None
 
 
 """
-below class if for searching location
+class getMeLocation: for searching location
 getwebbrowser method:
 	will create a chrome browser
 	defines a driver for other methods
@@ -62,11 +62,11 @@ class getMeLocation:
 		self.driver.execute_script("document.getElementsByClassName('btn btn-primary')[0].click()")		# click the Get GPS coordinate button
 
 	def fetchLatitude(self):
-		return self.driver.execute_script("return document.getElementById('latitude').value")		# to return latitude from javascript
+		# to return latitude from javascript
+		return self.driver.execute_script("return document.getElementById('latitude').value")
 
 	def fetchLongitude(self):
-		return self.driver.execute_script("return document.getElementById('longitude').value")		# to return longitude from javascript
-
+		return self.driver.execute_script("return document.getElementById('longitude').value")
 
 	def close(self):
 		# close driver
@@ -154,12 +154,20 @@ class SecretePage:
 		# array to store latitude and longitude of cities
 		new_array = []
 		for searching_input in output:
-			location_searcher.setAddress(searching_input[2])
-			time.sleep(1)
-			new_array.append(np.r_[searching_input, np.array([location_searcher.fetchLatitude()])
-								, np.array(location_searcher.fetchLongitude())])
+			print(searching_input[4])
+
+			try:
+				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))
+				time.sleep(1)
+				new_array.append(np.r_[searching_input, np.array([searching_input[4] + " : " + 
+					location_searcher.fetchLatitude()]) , 
+					+ np.array([searching_input[4] + " : " + location_searcher.fetchLongitude()])])
+			except:
+				new_array.append(np.r_[searching_input, np.array([searching_input[4] + ": "]), 
+					np.array([searching_input[4] + ": "])])
 
 		return new_array
+
 
 
 
@@ -227,8 +235,16 @@ def get_tested_samples_by_id(id_num):
 def get_state_district(driver):
 	return parser(driver, "ContentPlaceHolder_ddState")
 
-
+"""
+parser:
+gets arguments from command line 
+and no argument supplied or some
+string is supplied then uses default
+arguments that is 1, total number
+of pages
+"""
 # parser parses through data 
+
 def parser(driver, id_d):
 	global secrete_page
 	argv1 = None
@@ -252,7 +268,7 @@ def parser(driver, id_d):
 			pass
 
 	# loop through states
-	for data in range(1, length):
+	for data in range(argv1, argv2):
 		driver.execute_script(get_data(id_d, data))
 		secrete_page.pages_before_entry()
 		time.sleep(4)
@@ -280,14 +296,14 @@ def main():
 		get_state_district(driver)
 
 		# close driver and csv file
-		secrete_page.close()
 		location_searcher.close() 
+		secrete_page.close()
 
 	# closes opened file
 	finally:
 		# close everything before closing
-		secrete_page.file.close()
 		location_searcher.close() 
+		secrete_page.file.close()
 		
 
 if __name__ == '__main__':
