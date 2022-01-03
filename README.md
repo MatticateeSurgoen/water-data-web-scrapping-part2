@@ -10,7 +10,7 @@
 
 ## Installation
 
-> #### git clone https://github.com/ml-project-pdpu/water-data-web-scraping.git
+> #### git clone https://github.com/ml-project-pdpu/water-data-web-scrapping2.git
 > #### cd water-data-web-scrapping-part2
 > #### pip3 install -r requirements.txt
 > #### python3 ./scraper.py
