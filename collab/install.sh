@@ -10,11 +10,9 @@ cd water-data-web-scrapping-part2
 pip3 install -r requirements.txt
 
 if [ "$#" -eq 0 ]; then
-  python3 scraper2.py 
-elif [ "$#" -eq 1 ]; then
-  python3 scraper2.py $1 
+  python3 scraper2.py --headless
 elif [ "$#" -eq 2 ]; then
-  python3 scraper2.py $1 $2
+  python3 scraper2.py $1 $2 --headless
 fi
 mv output.csv ..
 cd ..
