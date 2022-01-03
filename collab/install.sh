@@ -14,7 +14,7 @@ if [ "$#" -eq 0 ]; then
 elif [ "$#" -eq 2 ]; then
   python3 scraper2.py $1 $2 --headless
 fi
-mv output.csv ..
-cd ..
-rm -rf water-data-web-scrapping-part2
-rm install.sh
+#mv output.csv ..
+#cd ..
+#rm -rf water-data-web-scrapping-part2
+#rm install.sh
