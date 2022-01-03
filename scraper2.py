@@ -1,5 +1,6 @@
 #!/usr/bin/env	python3
 
+import sys	# for arguments
 import time
 from selenium import webdriver				# import webdriver to communicate with web browser
 from selenium.webdriver.common.by import By
@@ -16,6 +17,7 @@ secrete_page = None
 
 # to search location
 location_searcher = None
+
 
 """
 below class if for searching location
@@ -151,7 +153,7 @@ class SecretePage:
 		# array to store latitude and longitude of cities
 		new_array = []
 		for searching_input in output:
-			location_searcher.setAddress(searching_input[4])
+			location_searcher.setAddress(searching_input[2])
 			time.sleep(1)
 			new_array.append(np.r_[searching_input, np.array([location_searcher.fetchLatitude()])
 								, np.array(location_searcher.fetchLongitude())])
@@ -227,7 +229,22 @@ def get_state_district(driver):
 # parser parses through data 
 def parser(driver, id_d):
 	global secrete_page
+	argv1 = None
+	argv2 = None
+
 	length = get_length_from_id(driver, id_d)
+
+	# argument parsing 
+	if len(sys.argv) < 2:
+		argv1 = 1
+		argv2 = length
+	elif len(sys.argv) == 2:
+		argv1 = int(sys.argv[1])
+		argv2 = length
+	elif len(sys.argv) == 3:
+		argv1 = int(sys.argv[1])
+		argv2 = int(sys.argv[2])
+
 
 	# loop through states
 	for data in range(1, length):
@@ -240,7 +257,7 @@ def main():
 	try:
 		# get webdriver
 		driver = get_webbrowser()
-		global secrete_page	
+		global secrete_page, location_searcher
 		secrete_page = SecretePage(driver)
 
 		# create a location_searcher 
