@@ -30,6 +30,7 @@ f"https://api.opencagedata.com/geocode/v1/json?q={query_location}&key=03c48dae07
 where replace query_location with name of city the last one is key
 that extracted by analysing code of site.
 """
+"""
 class getMeLocation: for searching location
 getwebbrowser method:
 	will create a chrome browser
