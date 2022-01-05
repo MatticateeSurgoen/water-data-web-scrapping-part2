@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup				# to extract data with help of css selector
 import csv									# to write csv file and do operation related to it.
 import numpy as np							# to fastup process of array manipulation
 import requests
+from sleepy_spin_lock import sleepy_spin_lock
 
 # page hidden inside of site
 secrete_page = None
@@ -60,6 +61,15 @@ class getLocationSpeedily:
 	def fetchLongitude(self):
 		return self.longitude
 
+
+class secureThreads(Thread):
+	def __init__(self, thr_id, spin_lock):
+		super().__init__()
+		self.thr_id = thr_id
+		self.spin_lock = spin_lock
+
+	def run(self):
+		
 
 """
 class getMeLocation: for searching location
@@ -340,9 +350,10 @@ def main():
 		global secrete_page, location_searcher
 		secrete_page = SecretePage(driver)
 
-		# create a location_searcher 
-#		location_searcher = getMeLocation()
 		location_searcher = getLocationSpeedily()
+
+		# spinlock object
+		spin_lock = sleepy_spin_lock()
 
 		# start web browser for searcher window
 		location_searcher.getwebbrowser(mode)
@@ -351,13 +362,10 @@ def main():
 		get_state_district(driver)
 
 		# close driver and csv file
-#		location_searcher.close() 
 		secrete_page.close()
 
-#	 	closes opened file
 	finally:
 		# close everything before closing
-#		location_searcher.close() 
 		secrete_page.file.close()
 		
 
