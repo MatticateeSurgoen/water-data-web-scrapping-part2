@@ -1,6 +1,7 @@
 #!/usr/bin/env	python3
 
 import argparse
+import json			# for parsing json data
 import sys	# for arguments
 import time
 from selenium import webdriver				# import webdriver to communicate with web browser
@@ -12,6 +13,7 @@ import re									# extract data with regular expression selection
 from bs4 import BeautifulSoup				# to extract data with help of css selector
 import csv									# to write csv file and do operation related to it.
 import numpy as np							# to fastup process of array manipulation
+import requests
 
 # page hidden inside of site
 secrete_page = None
@@ -32,6 +34,25 @@ where replace query_location with name of city the last one is key
 that extracted by analysing code of site.
 
 """
+class getLocationSpeedily:
+	def __init__(self):
+		latitude = None
+		longitude = None
+
+	def parseAddressInMap(self, address):
+		ret = requests.get(f"https://api.opencagedata.com/geocode/v1/json?q={address}&key=03c48dae07364cabb7f121d8c1519492")
+		data = json.loads(ret.text)
+
+		lat_lng_dict = data["results"][0]["geometry"]
+
+		self.latitude = str(lat_lng_dict["lat"])
+		self.longitude = str(lat_lng_dict["lng"])
+
+	def fetchLatitude(self):
+		return self.latitude
+
+	def fetchLongitude(self):
+		return self.longitude
 
 
 """
@@ -172,10 +193,11 @@ class SecretePage:
 			print(searching_input[4])
 
 			try:
-				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))				"""
-																										removes (rv) from column fourth state name
-																										for example: "Gandhinagar (rv)" it will return "Gandhinagar " only
-																									"""
+				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))
+				"""
+				removes (rv) from column fourth state name
+				for example: "Gandhinagar (rv)" it will return "Gandhinagar " only
+				"""
 				# wait for site to output result
 				time.sleep(1)
 				new_array.append(np.r_[searching_input, np.array([searching_input[4] + " : " + 
