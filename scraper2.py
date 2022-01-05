@@ -1,6 +1,5 @@
 #!/usr/bin/env	python3
 
-import argparse
 import json			# for parsing json data
 import sys	# for arguments
 import time
@@ -192,6 +191,9 @@ class SecretePage:
 		for searching_input in output:
 			print(searching_input[4])
 
+			# the site is causing error when some particular 
+			# location is not found so in order to make
+			# chrome browser alive this try and except is there.
 			try:
 				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))
 				"""
@@ -200,12 +202,11 @@ class SecretePage:
 				"""
 				# wait for site to output result
 				time.sleep(1)
-				new_array.append(np.r_[searching_input, np.array([searching_input[4] + " : " + 
-					location_searcher.fetchLatitude()]) , 
-					+ np.array([searching_input[4] + " : " + location_searcher.fetchLongitude()])])
+				new_array.append(np.r_[searching_input, np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLatitude())]) , 
+					np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLongitude())])])
 			except:
-				new_array.append(np.r_[searching_input, np.array([searching_input[4] + ": "]), 
-					np.array([searching_input[4] + ": "])])
+				new_array.append(np.r_[searching_input, np.array(["{} : ".format(searching_input[4])]), 
+					np.array(["{}: ".format(searching_input[4])])])
 
 		return new_array
 
