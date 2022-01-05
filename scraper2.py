@@ -196,25 +196,28 @@ class SecretePage:
 		# array to store latitude and longitude of cities
 		new_array = []
 		for searching_input in output:
-			print(searching_input[4])
 
-			# the site is causing error when some particular 
-			# location is not found so in order to make
-			# chrome browser alive this try and except is there.
-			try:
-				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))
-				"""
-				removes (rv) from column fourth state name
-				for example: "Gandhinagar (rv)" it will return "Gandhinagar " only
-				"""
-				# wait for site to output result
-				time.sleep(1)
-				new_array.append(np.r_[searching_input, np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLatitude())]) , 
-					np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLongitude())])])
-			except:
-				new_array.append(np.r_[searching_input, np.array(["{} : ".format(searching_input[4])]), 
-					np.array(["{}: ".format(searching_input[4])])])
+			#			# the site is causing error when some particular 
+			#			# location is not found so in order to make
+			#			# chrome browser alive this try and except is there.
+			#			try:
+			#				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))
+			#				"""
+			#				removes (rv) from column fourth state name
+			#				for example: "Gandhinagar (rv)" it will return "Gandhinagar " only
+			#				"""
+			#				# wait for site to output result
+			#				time.sleep(1)
+			#				new_array.append(np.r_[searching_input, np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLatitude())]) , 
+			#					np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLongitude())])])
+			#			except:
+			#				new_array.append(np.r_[searching_input, np.array(["{} : ".format(searching_input[4])]), 
+			#					np.array(["{}: ".format(searching_input[4])])])
 
+			location_searcher.parseAddressInMap(searching_input[4])
+
+			new_array.append(np.r_[searching_input, np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLatitude())]), 
+				np.array(["{}: {}".format(searching_input[4], fetchLongitude())])])
 		return new_array
 
 
@@ -338,7 +341,8 @@ def main():
 		secrete_page = SecretePage(driver)
 
 		# create a location_searcher 
-		location_searcher = getMeLocation()
+#		location_searcher = getMeLocation()
+		location_searcher = getLocationSpeedily()
 
 		# start web browser for searcher window
 		location_searcher.getwebbrowser(mode)
@@ -347,13 +351,13 @@ def main():
 		get_state_district(driver)
 
 		# close driver and csv file
-		location_searcher.close() 
+#		location_searcher.close() 
 		secrete_page.close()
 
-	# closes opened file
+#	 	closes opened file
 	finally:
 		# close everything before closing
-		location_searcher.close() 
+#		location_searcher.close() 
 		secrete_page.file.close()
 		
 
