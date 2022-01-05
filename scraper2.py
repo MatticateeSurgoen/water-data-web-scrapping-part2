@@ -1,5 +1,6 @@
 #!/usr/bin/env	python3
 
+import argparse
 import sys	# for arguments
 import time
 from selenium import webdriver				# import webdriver to communicate with web browser
@@ -29,7 +30,10 @@ f"https://api.opencagedata.com/geocode/v1/json?q={query_location}&key=03c48dae07
 
 where replace query_location with name of city the last one is key
 that extracted by analysing code of site.
+
 """
+
+
 """
 class getMeLocation: for searching location
 getwebbrowser method:
@@ -168,7 +172,11 @@ class SecretePage:
 			print(searching_input[4])
 
 			try:
-				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))
+				location_searcher.setAddress(re.sub('\(.*\)', '', searching_input[4]))				"""
+																										removes (rv) from column fourth state name
+																										for example: "Gandhinagar (rv)" it will return "Gandhinagar " only
+																									"""
+				# wait for site to output result
 				time.sleep(1)
 				new_array.append(np.r_[searching_input, np.array([searching_input[4] + " : " + 
 					location_searcher.fetchLatitude()]) , 
@@ -263,20 +271,22 @@ def parser(driver, id_d):
 
 	length = get_length_from_id(driver, id_d)
 
-	# argument parsing 
-	if len(sys.argv) < 2:
-		argv1 = 1
-		argv2 = length
-	else:
-		try:
-			if len(sys.argv) == 2:
-				argv1 = int(sys.argv[1])
-				argv2 = length
-			elif len(sys.argv) >= 3:
-				argv1 = int(sys.argv[1])
-				argv2 = int(sys.argv[2])
-		except ValueError:
-			pass
+	## argument parsing 
+	#if len(sys.argv) < 2:
+
+	argv1 = 1
+	argv2 = length
+
+	#else:
+	#	try:
+	#		if len(sys.argv) == 2:
+	#			argv1 = int(sys.argv[1])
+	#			argv2 = length
+	#		elif len(sys.argv) >= 3:
+	#			argv1 = int(sys.argv[1])
+	#			argv2 = int(sys.argv[2])
+	#	except ValueError:
+	#		pass
 
 	# loop through states
 	for data in range(argv1, argv2):
@@ -288,7 +298,7 @@ def parser(driver, id_d):
 def main():
 	try:
 		mode = False
-		for i in range(len(sys.argv)):
+		for i in range(1, len(sys.argv)):
 			if sys.argv[i] == "--headless":
 				mode = True
 
