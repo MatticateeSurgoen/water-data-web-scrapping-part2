@@ -42,10 +42,17 @@ class getLocationSpeedily:
 		ret = requests.get(f"https://api.opencagedata.com/geocode/v1/json?q={address}&key=03c48dae07364cabb7f121d8c1519492")
 		data = json.loads(ret.text)
 
-		lat_lng_dict = data["results"][0]["geometry"]
+		try:
+			lat_lng_dict = data["results"][0]["geometry"]
 
-		self.latitude = str(lat_lng_dict["lat"])
-		self.longitude = str(lat_lng_dict["lng"])
+			self.latitude = str(lat_lng_dict["lat"])
+			self.longitude = str(lat_lng_dict["lng"])
+
+		# index error is caused when there is
+		# json data doesn't able to handle our query
+		except IndexError:
+			self.latitude = None
+			self.longitude = None
 
 	def fetchLatitude(self):
 		return self.latitude
