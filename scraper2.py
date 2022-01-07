@@ -60,7 +60,7 @@ class getLocationSpeedily:
 
 	def fetchLongitude(self):
 		return self.longitude
-
+"""
 
 class secureThreads(Thread):
 	def __init__(self, thr_id, spin_lock):
@@ -69,7 +69,7 @@ class secureThreads(Thread):
 		self.spin_lock = spin_lock
 
 	def run(self):
-		
+"""		
 
 """
 class getMeLocation: for searching location
@@ -227,7 +227,7 @@ class SecretePage:
 			location_searcher.parseAddressInMap(searching_input[4])
 
 			new_array.append(np.r_[searching_input, np.array(["{} : {}".format(searching_input[4], location_searcher.fetchLatitude())]), 
-				np.array(["{}: {}".format(searching_input[4], fetchLongitude())])])
+				np.array(["{}: {}".format(searching_input[4], location_searcher.fetchLongitude())])])
 		return new_array
 
 
@@ -311,6 +311,8 @@ def parser(driver, id_d):
 	global secrete_page
 	argv1 = None
 	argv2 = None
+	driver.execute_script(get_data("ContentPlaceHolder_ddFinYear", 16))
+	time.sleep(3)
 
 	length = get_length_from_id(driver, id_d)
 
@@ -354,9 +356,6 @@ def main():
 
 		# spinlock object
 		spin_lock = sleepy_spin_lock()
-
-		# start web browser for searcher window
-		location_searcher.getwebbrowser(mode)
 
 		# traverse through whole options
 		get_state_district(driver)
